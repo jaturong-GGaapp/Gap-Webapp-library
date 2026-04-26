@@ -609,38 +609,7 @@ footer {
       </div>
     </div>
 
-    <!-- APP 2: House Design Plan -->
-    <div class="card" data-cat="architecture" data-featured="true" onclick="openModal('house')">
-      <div class="card-preview preview-house">
-        <div class="preview-deco">
-          <div class="mini-block" style="width:120px;height:60px;border-radius:2px"></div>
-          <div class="mini-block" style="width:60px;height:40px;border-radius:2px"></div>
-          <div class="mini-block" style="width:40px;height:40px;border-radius:2px"></div>
-        </div>
-        <div class="preview-icon">🏡</div>
-        <span class="card-badge badge-new">NEW</span>
-      </div>
-      <div class="card-body">
-        <div class="card-cat">Architecture</div>
-        <div class="card-title">แผนบ้านในฝัน</div>
-        <div class="card-desc">แผนดีไซน์บ้านสไตล์ Tropical Brutalism — ผังบ้าน, วัสดุ, พื้นที่ภายนอก และ Roadmap</div>
-        <div class="card-tags">
-          <span class="tag">Brutalist</span>
-          <span class="tag">Tadao Ando</span>
-          <span class="tag">Floor Plan</span>
-          <span class="tag">ไทย</span>
-        </div>
-        <div class="card-footer">
-          <div class="card-date">Apr 2026 · Local</div>
-          <div class="card-actions">
-            <button class="btn-ghost" onclick="event.stopPropagation(); openModal('house')">Info</button>
-            <a class="btn-open" href="house-design-plan.html" target="_blank" onclick="event.stopPropagation()">↗ เปิด</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- APP 3: Arch Project Plan -->
+    <!-- APP 2: Arch Project Plan -->
     <div class="card" data-cat="planning" data-featured="true" onclick="openModal('arch')">
       <div class="card-preview" style="background: linear-gradient(135deg, #0f1218 0%, #151c25 100%);">
         <div class="preview-deco">
@@ -729,18 +698,7 @@ const apps = {
     ],
     note: 'แอปที่ Gap สร้างไว้แล้วสำหรับเก็บไอเดียออกแบบบ้าน มี URL จริงที่เปิดได้ทุกที่ — เหมาะสำหรับพัฒนาต่อด้าน Feature เพิ่มเติม',
   },
-  house: {
-    title: 'แผนบ้านในฝัน',
-    cat: 'ARCHITECTURE',
-    link: 'house-design-plan.html',
-    info: [
-      ['สถานะ', '🟡 Local (ยังไม่ได้ Host)'],
-      ['สไตล์', 'Tropical Brutalism'],
-      ['ไฮไลต์', 'ผัง SVG, วัสดุ, Outdoor, Roadmap'],
-      ['สร้างเมื่อ', 'Apr 2026'],
-    ],
-    note: 'แผนดีไซน์บ้านสไตล์ผสม Brutalist + Tadao Ando + Tropical ชั้นเดียว 3 ห้องนอน — พัฒนาต่อได้โดยเพิ่มรูปจริง, ผัง 3D หรือ Budget Calculator',
-  },
+ 
   arch: {
     title: 'Architectural Project Plan',
     cat: 'PLANNING · ARCHITECTURE',
