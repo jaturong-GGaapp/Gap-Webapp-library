@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Architectural Project Plan — Gap</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Sans+Thai:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #111010;
+  --paper: #f7f4ef;
+  --warm: #e8e2d8;
+  --rule: #d0c8bc;
+  --accent: #c4622d;
+  --gold: #b89a5a;
+  --moss: #4a5e3a;
+  --slate: #3d4a5c;
+  --light-rule: #ede8e0;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'IBM Plex Sans Thai', sans-serif;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* NAV TABS */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--ink);
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.nav::-webkit-scrollbar { display: none; }
+.nav-btn {
+  padding: 14px 22px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #888;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.2s, border-color 0.2s;
+}
+.nav-btn:hover { color: var(--paper); }
+.nav-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* HEADER */
+.hero {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 52px 48px 44px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::after {
+  content: 'ARCH';
+  position: absolute;
+  right: -10px;
+  bottom: -30px;
+  font-family: 'DM Serif Display', serif;
+  font-size: 120px;
+  color: rgba(255,255,255,0.04);
+  pointer-events: none;
+  letter-spacing: -4px;
+}
+.hero-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.hero h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  line-height: 1.1;
+  font-weight: 400;
+  margin-bottom: 10px;
+}
+.hero h1 em { font-style: italic; color: var(--gold); }
+.hero p { color: #888; font-size: 13px; max-width: 520px; }
+.phase-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 28px;
+}
+.pill {
+  padding: 4px 12px;
+  border-radius: 2px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+.pill-1 { background: rgba(196,98,45,0.2); color: var(--accent); }
+.pill-2 { background: rgba(184,154,90,0.2); color: var(--gold); }
+.pill-3 { background: rgba(74,94,58,0.2); color: #7aaa5e; }
+.pill-4 { background: rgba(61,74,92,0.2); color: #7fa0cc; }
+.pill-5 { background: rgba(140,80,160,0.15); color: #bb88dd; }
+
+/* SECTIONS */
+.section { display: none; padding: 0 0 80px; }
+.section.active { display: block; }
+
+.container { max-width: 1100px; margin: 0 auto; padding: 0 32px; }
+
+.sec-header {
+  padding: 40px 32px 28px;
+  max-width: 1100px;
+  margin: 0 auto;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 36px;
+}
+.sec-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+.sec-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 400;
+}
+
+/* ===== GANTT CHART ===== */
+.gantt-wrap { overflow-x: auto; padding-bottom: 12px; }
+.gantt {
+  min-width: 900px;
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.gantt th {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 10px 8px;
+  text-align: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  font-weight: 400;
+  border-right: 1px solid #333;
+  white-space: nowrap;
+}
+.gantt th.task-col { text-align: left; padding-left: 16px; min-width: 200px; }
+.gantt th.phase-col { min-width: 60px; }
+.gantt td {
+  padding: 0;
+  border-bottom: 1px solid var(--light-rule);
+  border-right: 1px solid var(--light-rule);
+  vertical-align: middle;
+}
+.gantt td.task-name {
+  padding: 10px 16px 10px 16px;
+  font-size: 12.5px;
+  white-space: nowrap;
+  min-width: 200px;
+}
+.gantt td.task-name .task-phase {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+  margin-bottom: 2px;
+}
+.gantt td.task-name .task-title { font-weight: 500; }
+.gantt td.task-name .task-sub { font-size: 11px; color: #888; margin-top: 1px; }
+
+.gantt td.week-cell { min-width: 54px; height: 44px; }
+.bar {
+  height: 20px;
+  border-radius: 2px;
+  margin: 12px 4px;
+  opacity: 0.9;
+  transition: opacity 0.2s;
+  cursor: default;
+  position: relative;
+}
+.bar:hover { opacity: 1; }
+
+.bar-p1 { background: var(--accent); }
+.bar-p2 { background: var(--gold); }
+.bar-p3 { background: var(--moss); }
+.bar-p4 { background: var(--slate); }
+.bar-p5 { background: #8840aa; }
+.bar-milestone {
+  width: 14px;
+  height: 14px;
+  border-radius: 0;
+  transform: rotate(45deg);
+  margin: 15px auto;
+  background: var(--ink);
+}
+
+.gantt-phase-row td {
+  padding: 8px 16px;
+  background: var(--warm);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #666;
+  border-bottom: 1px solid var(--rule);
+}
+
+.gantt tr:hover td { background: rgba(0,0,0,0.02); }
+.gantt tr:hover td.task-name { background: rgba(0,0,0,0.03); }
+
+/* week headers */
+.week-now { background: rgba(196,98,45,0.12) !important; }
+.week-label-now { background: var(--accent) !important; color: white !important; }
+
+/* LEGEND */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 28px;
+  padding: 16px 20px;
+  background: var(--warm);
+  border-radius: 2px;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+.legend-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+/* ===== PHASE CARDS ===== */
+.phase-block {
+  border: 1px solid var(--rule);
+  margin-bottom: 24px;
+  background: white;
+  overflow: hidden;
+}
+.phase-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--rule);
+  cursor: pointer;
+}
+.phase-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.2rem;
+  color: var(--rule);
+  line-height: 1;
+  min-width: 44px;
+}
+.phase-meta { flex: 1; }
+.phase-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.15rem;
+  margin-bottom: 3px;
+}
+.phase-duration {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--accent);
+  letter-spacing: 1px;
+}
+.phase-toggle {
+  font-size: 18px;
+  color: #aaa;
+  transition: transform 0.3s;
+  font-family: monospace;
+}
+.phase-block.open .phase-toggle { transform: rotate(180deg); }
+
+.phase-body { padding: 24px; display: none; }
+.phase-block.open .phase-body { display: block; }
+
+.task-list { list-style: none; margin-bottom: 24px; }
+.task-item {
+  display: grid;
+  grid-template-columns: 24px 1fr auto;
+  gap: 12px;
+  align-items: start;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--light-rule);
+}
+.task-item:last-child { border-bottom: none; }
+.task-check {
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--rule);
+  border-radius: 2px;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+.task-content h4 { font-weight: 500; font-size: 13.5px; margin-bottom: 4px; }
+.task-content p { font-size: 12px; color: #666; line-height: 1.6; }
+.task-content .method-tag {
+  display: inline-block;
+  margin-top: 6px;
+  margin-right: 4px;
+  padding: 2px 8px;
+  background: var(--warm);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  border-radius: 2px;
+  color: #555;
+}
+.task-week {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--gold);
+  white-space: nowrap;
+  margin-top: 3px;
+}
+
+/* TOOLS SECTION */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+.tool-card {
+  border: 1px solid var(--rule);
+  padding: 22px;
+  background: white;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.tool-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.tool-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.tool-icon { font-size: 22px; }
+.tool-badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  padding: 2px 7px;
+  border-radius: 2px;
+  letter-spacing: 1px;
+}
+.badge-free { background: rgba(74,94,58,0.15); color: var(--moss); }
+.badge-paid { background: rgba(196,98,45,0.15); color: var(--accent); }
+.badge-free-trial { background: rgba(184,154,90,0.15); color: var(--gold); }
+.tool-name { font-family: 'DM Serif Display', serif; font-size: 1.1rem; margin-bottom: 4px; }
+.tool-phase {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: #aaa;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+.tool-desc { font-size: 12.5px; color: #555; line-height: 1.65; }
+.tool-tip {
+  margin-top: 12px;
+  padding: 10px 12px;
+  background: var(--warm);
+  font-size: 11.5px;
+  color: #555;
+  border-left: 2px solid var(--gold);
+  line-height: 1.6;
+}
+
+/* METHOD SECTION */
+.method-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+.method-card {
+  padding: 0;
+  border: 1px solid var(--rule);
+  overflow: hidden;
+  background: white;
+}
+.method-head {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--rule);
+}
+.method-head h3 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.05rem;
+  margin-bottom: 3px;
+}
+.method-head span {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--accent);
+  letter-spacing: 1px;
+}
+.method-body { padding: 16px 20px; }
+.method-steps {
+  list-style: none;
+  counter-reset: steps;
+}
+.method-steps li {
+  counter-increment: steps;
+  display: flex;
+  gap: 12px;
+  margin-bottom: 10px;
+  font-size: 12.5px;
+}
+.method-steps li::before {
+  content: counter(steps);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--accent);
+  min-width: 16px;
+  margin-top: 1px;
+}
+.method-who {
+  margin-top: 12px;
+  padding: 8px 12px;
+  background: var(--warm);
+  font-size: 11px;
+  color: #666;
+  font-style: italic;
+  border-left: 2px solid var(--accent);
+}
+
+/* REFERENCE TABLE */
+.ref-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.ref-table th {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 12px 16px;
+  text-align: left;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  font-weight: 400;
+}
+.ref-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--light-rule);
+  vertical-align: top;
+  line-height: 1.6;
+}
+.ref-table tr:hover td { background: rgba(0,0,0,0.02); }
+.ref-table .arch { font-weight: 500; }
+.ref-table .project { font-style: italic; color: var(--accent); }
+.learn-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  margin: 2px 2px 0 0;
+  background: var(--warm);
+  font-size: 11px;
+  border-radius: 2px;
+  color: #555;
+}
+
+/* RESPONSIVE */
+@media (max-width: 640px) {
+  .hero { padding: 36px 24px 32px; }
+  .container, .sec-header { padding: 0 20px; }
+  .sec-header { padding: 32px 20px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hero">
+  <div class="hero-label">Project Timeline · Gap's Home Design</div>
+  <h1>Architectural<br><em>Project Plan</em></h1>
+  <p>แผนการออกแบบบ้านแบบ Professional — ครอบคลุม Tools, Methods, Gantt Chart และ Precedent Study</p>
+  <div class="phase-pills">
+    <span class="pill pill-1">Phase 1 · Concept</span>
+    <span class="pill pill-2">Phase 2 · Schematic</span>
+    <span class="pill pill-3">Phase 3 · Design Dev</span>
+    <span class="pill pill-4">Phase 4 · Tech Drawing</span>
+    <span class="pill pill-5">Phase 5 · Review</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <button class="nav-btn active" onclick="showSection('gantt',this)">Gantt Chart</button>
+  <button class="nav-btn" onclick="showSection('phases',this)">Phase Details</button>
+  <button class="nav-btn" onclick="showSection('tools',this)">Tools</button>
+  <button class="nav-btn" onclick="showSection('methods',this)">Methods</button>
+  <button class="nav-btn" onclick="showSection('reference',this)">Precedent Study</button>
+</nav>
+
+<!-- ===== GANTT CHART ===== -->
+<div id="gantt" class="section active">
+  <div class="sec-header">
+    <div class="sec-label">Timeline Overview</div>
+    <div class="sec-title">Gantt Chart — 20 Weeks</div>
+  </div>
+  <div class="container">
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>Phase 1: Concept</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--gold)"></div>Phase 2: Schematic</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--moss)"></div>Phase 3: Design Dev</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--slate)"></div>Phase 4: Tech Drawing</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#8840aa"></div>Phase 5: Review</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--ink); transform:rotate(45deg)"></div>Milestone</div>
+    </div>
+
+    <div class="gantt-wrap">
+      <table class="gantt">
+        <thead>
+          <tr>
+            <th class="task-col">TASK</th>
+            <th class="phase-col week-label-now">W1</th>
+            <th class="phase-col">W2</th>
+            <th class="phase-col">W3</th>
+            <th class="phase-col">W4</th>
+            <th class="phase-col">W5</th>
+            <th class="phase-col">W6</th>
+            <th class="phase-col">W7</th>
+            <th class="phase-col">W8</th>
+            <th class="phase-col">W9</th>
+            <th class="phase-col">W10</th>
+            <th class="phase-col">W11</th>
+            <th class="phase-col">W12</th>
+            <th class="phase-col">W13</th>
+            <th class="phase-col">W14</th>
+            <th class="phase-col">W15</th>
+            <th class="phase-col">W16</th>
+            <th class="phase-col">W17</th>
+            <th class="phase-col">W18</th>
+            <th class="phase-col">W19</th>
+            <th class="phase-col">W20</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <!-- PHASE 1 -->
+          <tr class="gantt-phase-row"><td colspan="21">PHASE 1 — CONCEPT DEVELOPMENT · สัปดาห์ที่ 1–5</td></tr>
+
+          <tr>
+            <td class="task-name">
+              <div class="task-phase" style="color:var(--accent)">P1.1</div>
+              <div class="task-title">Design Brief & Goals</div>
+              <div class="task-sub">กำหนด Intent ของบ้าน</div>
+            </td>
+            <td class="week-cell week-now"><div class="bar bar-p1" style="width:90%"></div></td>
+            <td class="week-cell"><div class="bar bar-p1" style="width:50%"></div></td>
+            <td class="week-cell"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          </tr>
+
+          <tr>
+            <td class="task-name">
+              <div class="task-phase" style="color:var(--accent)">P1.2</div>
+              <div class="task-title">Precedent Research</div>
+              <div class="task-sub">ศึกษางานสถาปนิก</div>
+            </td>
+            <td class="week-cell week-now"><div class="bar bar-p1" style="width:60%"></div></td>
+            <td class="week-cell"><div class="bar bar-p1"></div></td>
+            <td class="week-cell"><div class="bar bar-p1" style="width:40%"></div></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          </tr>
+
+          <tr>
+            <td class="task-name">
+              <div class="task-phase" style="color:var(--accent)">P1.3</div>
+              <div class="task-title">Bubble + Circulation Diagrams</div>
+              <div class="task-sub">วาดมือ — ความสัมพันธ์พื้นที่</div>
+            </td>
+            <td class="week-cell week-now"></td>
+            <td class="week-cell"><div class="bar bar-p1"></div></td>
+            <td class="week-cell"><div class="bar bar-p1"></div></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          </tr>
+
+          <tr>
+            <td class="task-name">
+              <div class="task-phase" style="color:var(--accent)">P1.4</div>
+              <div class="task-title">Sun & Wind Analysis</div>
+              <div class="task-sub">วิเคราะห์แสง-ลม-ทิศ</div>
+            </td>
+            <td class="week-cell week-now"></td>
+            <td class="week-cell"></td>
+            <td class="week-cell"><div class="bar bar-p1"></div></td>
+            <td><div class="bar bar-p1" style="width:60%"></div></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          </tr>
+
+          <tr>
+            <td class="task-name">
+              <div class="task-phase" style="color:var(--accent)">P1.5</div>
+              <div class="task-title">Concept Statement + Mood Board</div>
+              <div class="task-sub">Lock คอนเซ็ปต์หลัก</div>
+            </td>
+            <td class="week-cell week-now"></td>
+            <td class="week-cell"></td>
+            <td class="week-cell"></td>
+            <td><div class="bar bar-p1"></div></td>
+            <td><div class="bar bar-p1"></div></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          </tr>
+
+          <tr>
+            <td class="task-name" style="color:var(--accent)">
+              <div class="task-phase">MILESTONE</div>
+              <div class="task-title">✦ Concept Approved</div>
+            </td>
+            <td class="week-cell week-now"></td><td></td><td></td><td></td>
+            <td><div class="bar-milestone"></div></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          </tr>
+
+          <!-- PHASE 2 -->
+          <tr class="gantt-phase-row"><td colspan="21">PHASE 2 — SCHEMATIC DESIGN · สัปดาห์ที่ 5–9</td></tr>
+
+          <tr>
+            <td class="task-name">
+              <div class="task-phase" style="color:var(--gold)">P2.1</div>
+              <div class="task-title">Space Programming</div>
+              <div class="task-sub">กำหนดพื้นที่แต่ละห้อง (ตร.ม.)</div>
+            </td>
+            <td class="week-cell week-now"></td><td></td><td></td><td></td>
+            <td><div class="bar bar-p2"></div></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          </tr>
+
+          <tr>
+            <td class="task-name">
+              <div class="task-phase" style="color:var(--gold)">P2.2</div>
+              <div class="task-title">Floor Plan Sketches (3 Options)</div>
+              <div class="task-sub">วาดผัง 3 แบบ — วาดมือ</div>
+            </td>
+            <td class="week-cell week-now"></td><td></td><td></td><td></td><td></td>
+            <td><div class="bar bar-p2"></div></td>
+            <td><div class="bar bar-p2"></div></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          </tr>
+
+          <tr>
+            <td class="task-name">
+              <div class="task-phase" style="color:var(--gold)">P2.3</div>
+              <div class="task-title">SketchUp Mass Model</div>
+              <div class="task-sub">3D กล่อง + Shadow Study</div>
+            </td>
+            <td class="week-cell week-now"></td><td></td><td></td><td></td><td></td><td></td>
+            <td><div class="bar bar-p2"></div></td>
+            <td><div class="bar bar-p2"></div></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          </tr>
+
+          <tr>
+            <td class="task-name">
+              <div class="task-phase" style="color:var(--gold)">P2.4</div>
+              <div class="task-title">Select Best Option</div>
+              <div class="task-sub">เลือก 1 แบบจาก 3</div>
+            </td>
+            <td class="week-cell week-now"></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td><div class="bar bar-p2"></div></td>
+            <td><div class="bar bar-p2" style="width:50%"></div></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          </tr>
+
+          <tr>
+            <td class="task-name" style="color:var(--gold)">
+              <div class="task-phase">MILESTONE</div>
+              <div class="task-title">✦ Schematic Locked</div>
+            </td>
+            <td class="week-cell week-now"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td><div class="bar-milestone" style="background:var(--gold)"></div></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          </tr>
+
+          <!-- PHASE 3 -->
+          <tr class="gantt-phase-row"><td colspan="21">PHASE 3 — DESIGN DEVELOPMENT · สัปดาห์ที่ 9–14</td></tr>
+
+          <tr>
+            <td class="task-name">
+              <div class="task-phase" style="color:var(--moss)">P3.1</div>
+              <div class="task-title">Refined Floor Plan (1:100)</div>
+              <div class="task-sub">ผังละเอียดใน AutoCAD / DraftSight</div>
+            </td>
+            <td class="week-cell week-now"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td><div class="bar bar-p3"></div></td>
+            <td><div class="bar bar-p3"></div></td>
+            <td><div class="bar bar-p3"></div></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          </tr>
+
+          <tr>
+            <td class="task-name">
+              <div class="task-phase" style="color:var(--moss)">P3.2</div>
+              <div class="task-title">Elevations & Sections</div>
+              <div class="task-sub">รูปด้าน + รูปตัด</div>
+            </td>
+            <td class="week-cell week-now"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td><div class="bar bar-p3"></div></td>
+            <td><div class="bar bar-p3"></div></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          </tr>
+
+          <tr>
+            <td class="task-name">
+              <div class="task-phase" style="color:var(--moss)">P3.3</div>
+              <div class="task-title">SketchUp Detailed Model + Render</div>
+              <div class="task-sub">3D ละเอียด + Enscape/Vray</div>
+            </td>
+            <td class="week-cell week-now"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td><div class="bar bar-p3"></div></td>
+            <td><div class="bar bar-p3"></div></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          </tr>
+
+          <tr>
+            <td class="task-name">
+              <div class="task-phase" style="color:var(--moss)">P3.4</div>
+              <div class="task-title">Material & Color Board</div>
+              <div class="task-sub">เลือกวัสดุ + สีจริง</div>
+            </td>
+            <td class="week-cell week-now"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td><div class="bar bar-p3"></div></td>
+            <td><div class="bar bar-p3" style="width:60%"></div></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td>
+          </tr>
+
+          <!-- PHASE 4 -->
+          <tr class="gantt-phase-row"><td colspan="21">PHASE 4 — TECHNICAL DRAWINGS · สัปดาห์ที่ 14–18</td></tr>
+
+          <tr>
+            <td class="task-name">
+              <div class="task-phase" style="color:#7fa0cc">P4.1</div>
+              <div class="task-title">Construction Documents</div>
+              <div class="task-sub">แบบก่อสร้างครบชุด</div>
+            </td>
+            <td class="week-cell week-now"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td><div class="bar bar-p4"></div></td>
+            <td><div class="bar bar-p4"></div></td>
+            <td><div class="bar bar-p4"></div></td>
+            <td></td><td></td><td></td><td></td>
+          </tr>
+
+          <tr>
+            <td class="task-name">
+              <div class="task-phase" style="color:#7fa0cc">P4.2</div>
+              <div class="task-title">Structural Concept Notes</div>
+              <div class="task-sub">โน้ตโครงสร้างเบื้องต้น</div>
+            </td>
+            <td class="week-cell week-now"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td><div class="bar bar-p4"></div></td>
+            <td><div class="bar bar-p4"></div></td>
+            <td></td><td></td><td></td>
+          </tr>
+
+          <tr>
+            <td class="task-name">
+              <div class="task-phase" style="color:#7fa0cc">P4.3</div>
+              <div class="task-title">BOQ — Bill of Quantities</div>
+              <div class="task-sub">ประมาณราคาคร่าวๆ</div>
+            </td>
+            <td class="week-cell week-now"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td><div class="bar bar-p4"></div></td>
+            <td><div class="bar bar-p4"></div></td>
+            <td></td><td></td>
+          </tr>
+
+          <!-- PHASE 5 -->
+          <tr class="gantt-phase-row"><td colspan="21">PHASE 5 — REVIEW & PRESENTATION · สัปดาห์ที่ 18–20</td></tr>
+
+          <tr>
+            <td class="task-name">
+              <div class="task-phase" style="color:#bb88dd">P5.1</div>
+              <div class="task-title">Design Review</div>
+              <div class="task-sub">ทบทวน + Self-critique</div>
+            </td>
+            <td class="week-cell week-now"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td><div class="bar bar-p5"></div></td>
+            <td></td><td></td>
+          </tr>
+
+          <tr>
+            <td class="task-name">
+              <div class="task-phase" style="color:#bb88dd">P5.2</div>
+              <div class="task-title">Presentation Package</div>
+              <div class="task-sub">จัดทำ Portfolio / Deck</div>
+            </td>
+            <td class="week-cell week-now"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td><div class="bar bar-p5"></div></td>
+            <td><div class="bar bar-p5"></div></td>
+          </tr>
+
+          <tr>
+            <td class="task-name" style="color:#bb88dd">
+              <div class="task-phase">MILESTONE</div>
+              <div class="task-title">✦ Final Design Complete</div>
+            </td>
+            <td class="week-cell week-now"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td><div class="bar-milestone" style="background:#8840aa"></div></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PHASE DETAILS ===== -->
+<div id="phases" class="section">
+  <div class="sec-header">
+    <div class="sec-label">Work Breakdown</div>
+    <div class="sec-title">รายละเอียดงานแต่ละ Phase</div>
+  </div>
+  <div class="container">
+
+    <!-- P1 -->
+    <div class="phase-block open">
+      <div class="phase-header" onclick="togglePhase(this)">
+        <div class="phase-num">01</div>
+        <div class="phase-meta">
+          <div class="phase-name">Concept Development</div>
+          <div class="phase-duration">W1–W5 · 5 สัปดาห์ · คุณอยู่ตรงนี้ ◀</div>
+        </div>
+        <div class="phase-toggle">▼</div>
+      </div>
+      <div class="phase-body">
+        <ul class="task-list">
+          <li class="task-item">
+            <div class="task-check"></div>
+            <div class="task-content">
+              <h4>P1.1 — เขียน Design Intent Statement</h4>
+              <p>เขียน 3–5 ประโยค อธิบายว่าบ้านนี้ให้ความรู้สึกอะไร ใครอยู่ วิถีชีวิตเป็นยังไง เช่น "บ้านที่เงียบสงบและหนักแน่น เปิดรับแสงเช้า สวนเป็นส่วนหนึ่งของการอยู่อาศัย"</p>
+              <span class="method-tag">✍️ วาดมือ</span>
+              <span class="method-tag">📝 Journal</span>
+            </div>
+            <div class="task-week">W1–W2</div>
+          </li>
+          <li class="task-item">
+            <div class="task-check"></div>
+            <div class="task-content">
+              <h4>P1.2 — Precedent Study (5 โปรเจกต์)</h4>
+              <p>เลือกสถาปนิก 5 คน วิเคราะห์แต่ละโปรเจกต์ด้วย 4 หัวข้อ: Form, Light, Material, Circulation แล้ว "วาดลอก" Floor Plan มือ — วิธีที่ Tadao Ando ใช้จริง</p>
+              <span class="method-tag">🖊️ Hand Trace</span>
+              <span class="method-tag">📐 Scale Drawing</span>
+              <span class="method-tag">🗂️ Miro / IdeaFlow</span>
+            </div>
+            <div class="task-week">W1–W3</div>
+          </li>
+          <li class="task-item">
+            <div class="task-check"></div>
+            <div class="task-content">
+              <h4>P1.3 — Bubble Diagram + Zoning</h4>
+              <p>วาด Bubble ให้ทุกห้อง เชื่อมเส้นความสัมพันธ์ จากนั้น Cluster เป็น Zone: Public (ห้องนั่งเล่น, ครัว), Private (ห้องนอน), Service (ห้องน้ำ, Storage). ทำบนกระดาษ A3 อย่างน้อย 2 เวอร์ชัน</p>
+              <span class="method-tag">✏️ กระดาษ A3</span>
+              <span class="method-tag">🔵 Bubble Method</span>
+            </div>
+            <div class="task-week">W2–W3</div>
+          </li>
+          <li class="task-item">
+            <div class="task-check"></div>
+            <div class="task-content">
+              <h4>P1.4 — Sun Path + Wind Rose Analysis</h4>
+              <p>ใช้ App "Sun Seeker" หรือ SunCalc.org เช็ค Sun Path ของพื้นที่ที่จะสร้าง วาด Diagram แสดงทิศที่แดดส่อง และทิศลมหลักของไทย (ลมมรสุม NE/SW) เพื่อกำหนดการวางบ้านบนที่ดิน</p>
+              <span class="method-tag">☀️ Sun Seeker App</span>
+              <span class="method-tag">🌬️ Wind Rose</span>
+              <span class="method-tag">🗺️ SunCalc.org</span>
+            </div>
+            <div class="task-week">W3–W4</div>
+          </li>
+          <li class="task-item">
+            <div class="task-check"></div>
+            <div class="task-content">
+              <h4>P1.5 — Concept Board + Concept Statement Lock</h4>
+              <p>รวม Reference, Mood, Materials, Colors บน Mood Board เดียว จากนั้นเขียน Concept Statement 1 ประโยคที่จะเป็น "เข็มทิศ" ตลอดโปรเจกต์ Print หรือวางบนโต๊ะให้เห็นตลอด</p>
+              <span class="method-tag">🖼️ Canva / Miro</span>
+              <span class="method-tag">🖨️ Print & Pin</span>
+            </div>
+            <div class="task-week">W4–W5</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- P2 -->
+    <div class="phase-block">
+      <div class="phase-header" onclick="togglePhase(this)">
+        <div class="phase-num">02</div>
+        <div class="phase-meta">
+          <div class="phase-name">Schematic Design</div>
+          <div class="phase-duration">W5–W9 · 4 สัปดาห์</div>
+        </div>
+        <div class="phase-toggle">▼</div>
+      </div>
+      <div class="phase-body">
+        <ul class="task-list">
+          <li class="task-item">
+            <div class="task-check"></div>
+            <div class="task-content">
+              <h4>P2.1 — Space Program Sheet</h4>
+              <p>ทำ Spreadsheet รายชื่อทุกห้อง + ขนาด ตร.ม. + ความสูงเพดาน + จำนวนคนใช้งาน + ความสำคัญ (Primary/Secondary) รวมแล้วต้องไม่เกินขนาดบ้านที่ต้องการ ตัวอย่าง: บ้าน 200 ตร.ม. — แบ่งสัดส่วนได้อย่างไร</p>
+              <span class="method-tag">📊 Google Sheets</span>
+              <span class="method-tag">📐 Net/Gross Ratio</span>
+            </div>
+            <div class="task-week">W5</div>
+          </li>
+          <li class="task-item">
+            <div class="task-check"></div>
+            <div class="task-content">
+              <h4>P2.2 — Floor Plan Options (3 แบบ)</h4>
+              <p>วาดผัง 1:200 บนกระดาษ Grid 3 แบบที่แตกต่างกันจริงๆ เช่น แบบ Linear, แบบ L-Shape, แบบ Courtyard กฎสำคัญ: อย่าลบ เก็บทุก Iteration ไว้ ห้ามเลือกแบบแรกโดยไม่ทดลองอื่น</p>
+              <span class="method-tag">📐 Grid Paper 1:200</span>
+              <span class="method-tag">✏️ Pencil Only</span>
+              <span class="method-tag">⏱️ 1 ชม./แบบ</span>
+            </div>
+            <div class="task-week">W6–W7</div>
+          </li>
+          <li class="task-item">
+            <div class="task-check"></div>
+            <div class="task-content">
+              <h4>P2.3 — SketchUp Massing + Shadow Study</h4>
+              <p>สร้าง Mass Model กล่องง่ายๆ ใน SketchUp ตั้ง Location เป็นไทย ดู Shadow Study เดือน ธ.ค. (แดดต่ำ) vs มิ.ย. (แดดสูง) เพื่อตรวจสอบว่าชายคาบังแดดเข้าห้องนอนพอมั้ย</p>
+              <span class="method-tag">💻 SketchUp Free</span>
+              <span class="method-tag">☀️ Shadow Tool</span>
+              <span class="method-tag">📍 Geo-location</span>
+            </div>
+            <div class="task-week">W7–W8</div>
+          </li>
+          <li class="task-item">
+            <div class="task-check"></div>
+            <div class="task-content">
+              <h4>P2.4 — Design Critique (Self-review)</h4>
+              <p>วาง 3 แบบเรียงกัน ตั้งคำถามกับตัวเองทีละแบบ: (1) ตรงกับ Concept Statement มั้ย? (2) Circulation สมเหตุสมผลมั้ย? (3) แสงเข้าถึงห้องหลักได้มั้ย? เลือก 1 แบบ หรือ Merge ที่ดีที่สุดของแต่ละแบบ</p>
+              <span class="method-tag">🧠 Self-Critique Matrix</span>
+              <span class="method-tag">📷 Photo &amp; Archive</span>
+            </div>
+            <div class="task-week">W8–W9</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- P3 -->
+    <div class="phase-block">
+      <div class="phase-header" onclick="togglePhase(this)">
+        <div class="phase-num">03</div>
+        <div class="phase-meta">
+          <div class="phase-name">Design Development</div>
+          <div class="phase-duration">W9–W14 · 5 สัปดาห์</div>
+        </div>
+        <div class="phase-toggle">▼</div>
+      </div>
+      <div class="phase-body">
+        <ul class="task-list">
+          <li class="task-item">
+            <div class="task-check"></div>
+            <div class="task-content">
+              <h4>P3.1 — Refined Floor Plan 1:100</h4>
+              <p>วาดผังละเอียดใน AutoCAD Web หรือ DraftSight (ฟรี) ใส่ขนาดทุกห้อง เปิดประตู-หน้าต่าง พร้อม Dimension Lines และ Annotations. Scale 1:100 คือมาตรฐานสำหรับ Presentation</p>
+              <span class="method-tag">💻 AutoCAD Web (ฟรี)</span>
+              <span class="method-tag">📐 Scale 1:100</span>
+              <span class="method-tag">🔲 Layer System</span>
+            </div>
+            <div class="task-week">W9–W11</div>
+          </li>
+          <li class="task-item">
+            <div class="task-check"></div>
+            <div class="task-content">
+              <h4>P3.2 — Elevations (รูปด้าน) 4 ทิศ</h4>
+              <p>วาดรูปด้านทั้ง 4 ทิศ (N/S/E/W) Scale 1:100 แสดงความสูง, ชายคา, หน้าต่าง, วัสดุผิวนอก Elevation ช่วยให้เห็นว่าบ้านดูยังไงจากข้างนอกจริงๆ</p>
+              <span class="method-tag">📐 4 Elevations</span>
+              <span class="method-tag">✏️ Hatching วัสดุ</span>
+            </div>
+            <div class="task-week">W10–W12</div>
+          </li>
+          <li class="task-item">
+            <div class="task-check"></div>
+            <div class="task-content">
+              <h4>P3.3 — SketchUp Detailed + Render</h4>
+              <p>เพิ่มรายละเอียดใน SketchUp: ผนัง, หน้าต่าง, ต้นไม้, เฟอร์นิเจอร์หยาบๆ ใช้ Enscape for SketchUp (Free Trial) หรือ Lumion เพื่อ Render ภาพ Exterior และ Interior ที่สมจริง</p>
+              <span class="method-tag">💻 SketchUp</span>
+              <span class="method-tag">🎨 Enscape (Trial)</span>
+              <span class="method-tag">🌳 3D Warehouse</span>
+            </div>
+            <div class="task-week">W11–W13</div>
+          </li>
+          <li class="task-item">
+            <div class="task-check"></div>
+            <div class="task-content">
+              <h4>P3.4 — Material & Finish Schedule</h4>
+              <p>ทำ Table วัสดุแต่ละพื้นที่: พื้น, ผนัง, เพดาน, ประตู-หน้าต่าง ระบุชื่อวัสดุจริง (เช่น "Concrete Screed 50mm", "Microcement Trowel Finish") ทำ Sample Board เล็กๆ ถ่ายรูปเก็บไว้</p>
+              <span class="method-tag">📋 Finish Schedule</span>
+              <span class="method-tag">🎨 Material Sample</span>
+              <span class="method-tag">🖼️ Canva Board</span>
+            </div>
+            <div class="task-week">W12–W14</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- P4 -->
+    <div class="phase-block">
+      <div class="phase-header" onclick="togglePhase(this)">
+        <div class="phase-num">04</div>
+        <div class="phase-meta">
+          <div class="phase-name">Technical Drawings</div>
+          <div class="phase-duration">W14–W18 · 4 สัปดาห์</div>
+        </div>
+        <div class="phase-toggle">▼</div>
+      </div>
+      <div class="phase-body">
+        <ul class="task-list">
+          <li class="task-item">
+            <div class="task-check"></div>
+            <div class="task-content">
+              <h4>P4.1 — Construction Document Set</h4>
+              <p>ชุดแบบก่อสร้างครบ ประกอบด้วย: Site Plan (1:500), Floor Plan (1:100), Elevations (1:100), Sections (1:100), Detail Drawings (1:20 หรือ 1:10) เช่น รายละเอียด Roof Edge, Window Frame, Concrete Wall Junction</p>
+              <span class="method-tag">💻 AutoCAD / DraftSight</span>
+              <span class="method-tag">📋 Title Block</span>
+              <span class="method-tag">📏 Multi-scale</span>
+            </div>
+            <div class="task-week">W14–W16</div>
+          </li>
+          <li class="task-item">
+            <div class="task-check"></div>
+            <div class="task-content">
+              <h4>P4.2 — Structural Concept Notes</h4>
+              <p>เขียนโน้ตโครงสร้างเบื้องต้น: คาน-เสา ตำแหน่งหลัก, Load Path ของหลังคา, การ Span ของห้องที่กว้าง ไม่ต้องคำนวณจริง แต่ต้องเข้าใจว่าแรงไหลไปทางไหน (ประโยชน์ของ IE Background มาใช้ตรงนี้!)</p>
+              <span class="method-tag">📐 Load Diagram</span>
+              <span class="method-tag">🏗️ Structural Logic</span>
+            </div>
+            <div class="task-week">W15–W17</div>
+          </li>
+          <li class="task-item">
+            <div class="task-check"></div>
+            <div class="task-content">
+              <h4>P4.3 — BOQ ประมาณการคร่าวๆ</h4>
+              <p>ทำ Bill of Quantities เบื้องต้น: คำนวณพื้นที่ผนัง, พื้น, หลังคา ใส่ราคาวัสดุหยาบๆ จาก HomePro หรือ SCG เพื่อดูว่างบประมาณสอดคล้องกับ Design มั้ย ปรับ Design ถ้าจำเป็น</p>
+              <span class="method-tag">📊 Google Sheets</span>
+              <span class="method-tag">💰 ราคาจาก HomePro</span>
+            </div>
+            <div class="task-week">W16–W18</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- P5 -->
+    <div class="phase-block">
+      <div class="phase-header" onclick="togglePhase(this)">
+        <div class="phase-num">05</div>
+        <div class="phase-meta">
+          <div class="phase-name">Review & Presentation</div>
+          <div class="phase-duration">W18–W20 · 2 สัปดาห์</div>
+        </div>
+        <div class="phase-toggle">▼</div>
+      </div>
+      <div class="phase-body">
+        <ul class="task-list">
+          <li class="task-item">
+            <div class="task-check"></div>
+            <div class="task-content">
+              <h4>P5.1 — Design Review Checklist</h4>
+              <p>ทบทวนทุกอย่างด้วย 5 คำถาม: (1) ตรง Concept Statement มั้ย? (2) Circulation ดีมั้ย? (3) แสงและลมทำงานได้มั้ย? (4) วัสดุ Feasible จริงมั้ย? (5) งบประมาณ Realistic มั้ย? แก้ไขก่อน Present</p>
+              <span class="method-tag">✅ Design Checklist</span>
+              <span class="method-tag">🔄 Revision Round</span>
+            </div>
+            <div class="task-week">W18–W19</div>
+          </li>
+          <li class="task-item">
+            <div class="task-check"></div>
+            <div class="task-content">
+              <h4>P5.2 — Presentation Package / Portfolio</h4>
+              <p>จัดทำชุด Presentation: Cover Page, Concept Statement, Site Analysis, Floor Plan, Elevations, 3D Renders, Material Board, BOQ Summary ใช้ Canva หรือ InDesign จัด Layout สวยงาม — นี่คือ Portfolio ชิ้นแรกของ Gap</p>
+              <span class="method-tag">🎨 Canva Pro</span>
+              <span class="method-tag">📄 A3 Layout</span>
+              <span class="method-tag">🗂️ PDF Export</span>
+            </div>
+            <div class="task-week">W19–W20</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== TOOLS ===== -->
+<div id="tools" class="section">
+  <div class="sec-header">
+    <div class="sec-label">Software & Tools</div>
+    <div class="sec-title">เครื่องมือที่ใช้ตามแต่ละ Phase</div>
+  </div>
+  <div class="container">
+    <div class="tools-grid">
+
+      <div class="tool-card">
+        <div class="tool-top"><div class="tool-icon">✏️</div><span class="tool-badge badge-free">FREE</span></div>
+        <div class="tool-name">กระดาษ + ดินสอ</div>
+        <div class="tool-phase">PHASE 1–2 · Concept & Schematic</div>
+        <div class="tool-desc">เครื่องมือที่สถาปนิกทุกคนในโลกยังใช้อยู่ในช่วง Early Design ความเร็วในการคิดสำคัญกว่าความสวย</div>
+        <div class="tool-tip">💡 ใช้กระดาษ Trace Paper (บาง มองทะลุได้) วางซ้อนเพื่อพัฒนาจากแบบเดิม — วิธีเดียวกับที่ Tadao Ando ใช้</div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-top"><div class="tool-icon">💻</div><span class="tool-badge badge-free">FREE</span></div>
+        <div class="tool-name">SketchUp Free</div>
+        <div class="tool-phase">PHASE 2–3 · Massing & 3D</div>
+        <div class="tool-desc">3D Modeling ที่เรียนรู้ได้เร็วที่สุด เหมาะสำหรับ Massing Study, Shadow Analysis และ Client Presentation</div>
+        <div class="tool-tip">💡 Extension ที่ต้องลง: Enscape (Render), 1001bit (ผนัง-บันได), Curic Sun (แสง)</div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-top"><div class="tool-icon">📐</div><span class="tool-badge badge-free">FREE</span></div>
+        <div class="tool-name">AutoCAD Web / DraftSight</div>
+        <div class="tool-phase">PHASE 3–4 · Technical Drawing</div>
+        <div class="tool-desc">AutoCAD Web ใช้ฟรีในเบราว์เซอร์ DraftSight ใช้ฟรีบน Desktop เหมาะสำหรับวาดแบบ 2D ที่ต้องการความแม่นยำ</div>
+        <div class="tool-tip">💡 ตั้ง Layer System ตั้งแต่แรก: WALL, DOOR, WINDOW, FURNITURE, DIMENSION, ANNOTATION — จะช่วยมากตอนแก้แบบ</div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-top"><div class="tool-icon">🌞</div><span class="tool-badge badge-free">FREE</span></div>
+        <div class="tool-name">SunCalc.org + Sun Seeker</div>
+        <div class="tool-phase">PHASE 1 · Site Analysis</div>
+        <div class="tool-desc">SunCalc.org วิเคราะห์ Sun Path ในพิกัดจริง Sun Seeker คือ App มือถือที่ AR แสดงทิศแดด ณ เวลาจริง</div>
+        <div class="tool-tip">💡 เช็คทั้ง Summer Solstice (มิ.ย.) และ Winter Solstice (ธ.ค.) เพื่อออกแบบชายคาให้บังได้ทั้งปี</div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-top"><div class="tool-icon">🖼️</div><span class="tool-badge badge-free">FREE</span></div>
+        <div class="tool-name">Canva / Miro</div>
+        <div class="tool-phase">PHASE 1 & 5 · Mood Board & Presentation</div>
+        <div class="tool-desc">Canva สำหรับ Mood Board และ Presentation ที่สวยงาม Miro สำหรับ Diagram และ Mind Map แบบ Collaborative</div>
+        <div class="tool-tip">💡 สร้าง Mood Board ใน Canva แล้ว Print A3 ติดข้างโต๊ะทำงาน — ช่วยให้ไม่หลงออกจาก Concept</div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-top"><div class="tool-icon">🎨</div><span class="tool-badge badge-free-trial">FREE TRIAL</span></div>
+        <div class="tool-name">Enscape for SketchUp</div>
+        <div class="tool-phase">PHASE 3 · Visualization</div>
+        <div class="tool-desc">Real-time Renderer ที่ดีที่สุดสำหรับ SketchUp ภาพออกมา Photorealistic ใน Real-time ใช้ได้ 14 วันฟรี</div>
+        <div class="tool-tip">💡 ใช้ช่วง Trial ให้คุ้ม: Render ทุก View ที่ต้องการในคราวเดียว บันทึกเป็น PNG ความละเอียดสูง</div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-top"><div class="tool-icon">📊</div><span class="tool-badge badge-free">FREE</span></div>
+        <div class="tool-name">Google Sheets</div>
+        <div class="tool-phase">PHASE 2 & 4 · Program & BOQ</div>
+        <div class="tool-desc">ใช้ทำ Space Program Sheet และ BOQ (Bill of Quantities) ง่าย ไม่ต้องซื้อซอฟต์แวร์พิเศษ</div>
+        <div class="tool-tip">💡 ทำ Sheet แยก: (1) Room Program, (2) Area Calculation, (3) Material Takeoff, (4) Cost Estimate</div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-top"><div class="tool-icon">📱</div><span class="tool-badge badge-free">FREE</span></div>
+        <div class="tool-name">Morpholio Trace</div>
+        <div class="tool-phase">PHASE 1–2 · Quick Sketching</div>
+        <div class="tool-desc">App วาด Sketch บนมือถือ/แท็บเล็ต ที่ดีที่สุดสำหรับ Architect วาด Overlay บนรูปภาพได้ เหมาะสำหรับไอเดียเร็วๆ</div>
+        <div class="tool-tip">💡 ถ่ายรูป Reference แล้ว Trace ทับใน App เพื่อเข้าใจ Proportion และ Composition ของงานที่ชอบ</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ===== METHODS ===== -->
+<div id="methods" class="section">
+  <div class="sec-header">
+    <div class="sec-label">Design Methods</div>
+    <div class="sec-title">วิธีการออกแบบแบบสถาปนิกชั้นนำ</div>
+  </div>
+  <div class="container">
+    <div class="method-grid">
+
+      <div class="method-card">
+        <div class="method-head">
+          <h3>Trace Paper Method</h3>
+          <span>TADAO ANDO · ZAHA HADID</span>
+        </div>
+        <div class="method-body">
+          <ul class="method-steps">
+            <li>วาง Trace Paper ทับแบบเดิม</li>
+            <li>วาดใหม่ทับ เก็บส่วนที่ดี แก้ส่วนที่ไม่ดี</li>
+            <li>ซ้อนได้หลายชั้น เห็น Evolution ของแบบ</li>
+            <li>ห้ามลบแบบเก่า — เก็บทุก Layer</li>
+          </ul>
+          <div class="method-who">"I draw everything by hand. The hand and the mind must work together." — Tadao Ando</div>
+        </div>
+      </div>
+
+      <div class="method-card">
+        <div class="method-head">
+          <h3>3 Options Rule</h3>
+          <span>STANDARD PRACTICE · ALL FIRMS</span>
+        </div>
+        <div class="method-body">
+          <ul class="method-steps">
+            <li>วาด Option A (แบบที่นึกได้แรก)</li>
+            <li>วาด Option B (ตรงข้ามกับ A ที่สุด)</li>
+            <li>วาด Option C (Hybrid หรือ Radical)</li>
+            <li>เปรียบเทียบด้วย Criteria Matrix แล้วเลือก</li>
+          </ul>
+          <div class="method-who">ป้องกันการติด "First Idea Bias" — แบบแรกไม่ใช่แบบที่ดีที่สุดเสมอไป</div>
+        </div>
+      </div>
+
+      <div class="method-card">
+        <div class="method-head">
+          <h3>Programmatic Zoning</h3>
+          <span>SPACE PLANNING METHOD</span>
+        </div>
+        <div class="method-body">
+          <ul class="method-steps">
+            <li>แบ่งทุกห้องเป็น 3 Zone: Public / Private / Service</li>
+            <li>Public (นั่งเล่น, ครัว) → ติดถนน/สวนหน้า</li>
+            <li>Private (นอน, Study) → ส่วนลึก เงียบ</li>
+            <li>Service (น้ำ, Storage) → ตรงกลาง หรือด้านหลัง</li>
+          </ul>
+          <div class="method-who">เหมือนกับ Lean Layout ใน Industrial Engineering — minimize movement distance</div>
+        </div>
+      </div>
+
+      <div class="method-card">
+        <div class="method-head">
+          <h3>Section as Generator</h3>
+          <span>KENGO KUMA · BJARKE INGELS</span>
+        </div>
+        <div class="method-body">
+          <ul class="method-steps">
+            <li>แทนที่จะเริ่มจากผัง เริ่มจากวาด Section ก่อน</li>
+            <li>Section แสดงความสูง, แสง, และ Volume ได้ดีกว่า</li>
+            <li>วาด Section ผ่านห้องที่สำคัญที่สุดก่อน</li>
+            <li>ผังตามมาภายหลังจาก Section Logic</li>
+          </ul>
+          <div class="method-who">สำหรับบ้าน Tadao Ando style — Section คือที่ที่แสงถูกออกแบบ</div>
+        </div>
+      </div>
+
+      <div class="method-card">
+        <div class="method-head">
+          <h3>Precedent Trace Analysis</h3>
+          <span>ARCHITECTURAL EDUCATION METHOD</span>
+        </div>
+        <div class="method-body">
+          <ul class="method-steps">
+            <li>พิมพ์ Floor Plan ของสถาปนิกที่ชอบ</li>
+            <li>วาง Trace Paper ทับ วาดลอก Scale จริง</li>
+            <li>เขียน Annotation: ทำไมห้องนี้อยู่ตรงนี้?</li>
+            <li>ดูว่ามี Pattern อะไรที่ดึงมาใช้กับบ้านตัวเองได้</li>
+          </ul>
+          <div class="method-who">สถาปนิก IDIN Architects ไทยแนะนำวิธีนี้ในทุก Workshop</div>
+        </div>
+      </div>
+
+      <div class="method-card">
+        <div class="method-head">
+          <h3>Design Criteria Matrix</h3>
+          <span>RATIONAL DECISION METHOD</span>
+        </div>
+        <div class="method-body">
+          <ul class="method-steps">
+            <li>ตั้ง Criteria: แสง, Circulation, Concept, Cost</li>
+            <li>ให้ Weight แต่ละ Criteria (1–5)</li>
+            <li>Score แต่ละ Option ในแต่ละ Criteria</li>
+            <li>Option ที่ Score สูงสุด = เลือก (แต่ใช้ Gut ด้วย)</li>
+          </ul>
+          <div class="method-who">ประโยชน์ของ IE Background — ตัดสินใจอย่างมี Logic ไม่ใช่แค่ความรู้สึก</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ===== PRECEDENT STUDY ===== -->
+<div id="reference" class="section">
+  <div class="sec-header">
+    <div class="sec-label">Precedent Study</div>
+    <div class="sec-title">สถาปนิกและโปรเจกต์ที่ต้องศึกษา</div>
+  </div>
+  <div class="container">
+    <table class="ref-table">
+      <thead>
+        <tr>
+          <th>สถาปนิก</th>
+          <th>โปรเจกต์</th>
+          <th>เรียนจาก</th>
+          <th>วิธีศึกษา</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="arch">Tadao Ando</span><br><small>ญี่ปุ่น</small></td>
+          <td><span class="project">Azuma House (Row House in Sumiyoshi)</span></td>
+          <td>
+            <span class="learn-tag">Concrete + Light</span>
+            <span class="learn-tag">Courtyard in small plot</span>
+            <span class="learn-tag">Minimalism</span>
+          </td>
+          <td>วาดลอก Floor Plan + Section หาว่า Courtyard สร้างประสบการณ์อะไร</td>
+        </tr>
+        <tr>
+          <td><span class="arch">Tadao Ando</span><br><small>ญี่ปุ่น</small></td>
+          <td><span class="project">Church of the Light</span></td>
+          <td>
+            <span class="learn-tag">แสงเป็น Design Element</span>
+            <span class="learn-tag">Cross opening = Concept</span>
+          </td>
+          <td>วิเคราะห์ว่าแสงเข้าทางไหน ทำให้รู้สึกอะไร นำมาใช้กับ Skylight</td>
+        </tr>
+        <tr>
+          <td><span class="arch">IDIN Architects</span><br><small>ไทย</small></td>
+          <td><span class="project">Boat House / หลายโปรเจกต์</span></td>
+          <td>
+            <span class="learn-tag">Tropical Concrete ไทย</span>
+            <span class="learn-tag">สภาพอากาศร้อนชื้น</span>
+            <span class="learn-tag">ต้นไม้ + คอนกรีต</span>
+          </td>
+          <td>ดูว่า Ventilation ทำยังไง ชายคาเท่าไหร่ ต้นไม้ช่วยยังไง</td>
+        </tr>
+        <tr>
+          <td><span class="arch">Integrated Field</span><br><small>ไทย</small></td>
+          <td><span class="project">บ้านพักอาศัย หลายโปรเจกต์</span></td>
+          <td>
+            <span class="learn-tag">Modern Thai Minimalism</span>
+            <span class="learn-tag">Material honesty</span>
+          </td>
+          <td>ดูการใช้วัสดุดิบในงานไทย ว่า Concrete + Wood Balance กันยังไง</td>
+        </tr>
+        <tr>
+          <td><span class="arch">Kengo Kuma</span><br><small>ญี่ปุ่น</small></td>
+          <td><span class="project">Great (Bamboo) Wall, Prostho Museum</span></td>
+          <td>
+            <span class="learn-tag">Material = Concept</span>
+            <span class="learn-tag">Texture + Light</span>
+            <span class="learn-tag">Nature Integration</span>
+          </td>
+          <td>เรียนวิธีทำให้วัสดุเดียว (เช่น คอนกรีต) เล่าเรื่องได้ทั้งโปรเจกต์</td>
+        </tr>
+        <tr>
+          <td><span class="arch">Peter Zumthor</span><br><small>สวิส</small></td>
+          <td><span class="project">Vals Thermal Bath</span></td>
+          <td>
+            <span class="learn-tag">Atmosphere & Experience</span>
+            <span class="learn-tag">Stone + Water + Light</span>
+            <span class="learn-tag">Sensuousness</span>
+          </td>
+          <td>อ่านหนังสือ "Thinking Architecture" ทำความเข้าใจว่า "บรรยากาศ" คือสิ่งที่ออกแบบได้</td>
+        </tr>
+        <tr>
+          <td><span class="arch">Frameless Studio</span><br><small>ไทย</small></td>
+          <td><span class="project">บ้านคอนกรีตหลายโปรเจกต์</span></td>
+          <td>
+            <span class="learn-tag">Budget-conscious Brutalism</span>
+            <span class="learn-tag">Thai context</span>
+          </td>
+          <td>ดู Instagram และ Website — งานเหล่านี้ทำด้วยงบไม่สูงมาก เรียนเรื่อง Cost-effective concrete</td>
+        </tr>
+        <tr>
+          <td><span class="arch">Bjarke Ingels (BIG)</span><br><small>เดนมาร์ก</small></td>
+          <td><span class="project">8 House, VM Houses</span></td>
+          <td>
+            <span class="learn-tag">Pragmatic Utopia</span>
+            <span class="learn-tag">Diagram-to-Form</span>
+            <span class="learn-tag">Concept Clarity</span>
+          </td>
+          <td>ดูวิธีที่ BIG ทำ Concept Diagram แล้วกลายเป็น Form — ชัดเจนมาก เหมาะกับคนที่ชอบ Logic</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+function showSection(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function togglePhase(header) {
+  const block = header.parentElement;
+  block.classList.toggle('open');
+}
+</script>
+</body>
+</html>

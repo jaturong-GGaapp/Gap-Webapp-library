@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gap's Web App Library</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Noto+Sans+Thai:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0e0e0f;
+  --surface: #161618;
+  --surface2: #1e1e21;
+  --border: #2a2a2e;
+  --border-light: #333338;
+  --text: #e8e6e1;
+  --muted: #666670;
+  --accent: #ff6b35;
+  --accent2: #c4a35a;
+  --green: #4caf7d;
+  --blue: #5b9cf6;
+  --purple: #a78bfa;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans Thai', sans-serif;
+  font-weight: 300;
+  min-height: 100vh;
+}
+
+/* GRAIN OVERLAY */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+/* HEADER */
+header {
+  position: relative;
+  z-index: 1;
+  padding: 48px 40px 0;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-icon {
+  width: 36px;
+  height: 36px;
+  background: var(--accent);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.brand-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.brand-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 2px;
+  margin-top: 2px;
+}
+
+.header-stats {
+  display: flex;
+  gap: 24px;
+}
+
+.stat {
+  text-align: right;
+}
+
+.stat-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--accent);
+}
+
+.stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+
+/* HERO LINE */
+.hero-line {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2.2rem, 6vw, 4rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -1px;
+  margin-bottom: 12px;
+}
+
+.hero-line .accent { color: var(--accent); }
+.hero-line .dim { color: var(--muted); }
+
+.hero-desc {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 36px;
+  max-width: 500px;
+  line-height: 1.7;
+}
+
+/* FILTER BAR */
+.filter-bar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.filter-btn {
+  padding: 7px 16px;
+  border-radius: 100px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  border: 1px solid var(--border);
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-btn:hover { border-color: var(--border-light); color: var(--text); }
+.filter-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
+
+/* ADD BUTTON */
+.add-hint {
+  margin-left: auto;
+  padding: 7px 16px;
+  border-radius: 100px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  border: 1px dashed var(--border-light);
+  background: none;
+  color: var(--muted);
+  cursor: default;
+}
+
+/* MAIN GRID */
+main {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px 80px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+/* APP CARD */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+  cursor: pointer;
+  animation: fadeUp 0.5s ease both;
+}
+
+.card:hover {
+  border-color: var(--border-light);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+}
+
+.card[data-featured="true"] {
+  border-color: rgba(255,107,53,0.3);
+}
+
+.card[data-featured="true"]:hover {
+  border-color: var(--accent);
+  box-shadow: 0 12px 40px rgba(255,107,53,0.15);
+}
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(16px); }
+  to { opacity:1; transform:translateY(0); }
+}
+
+.card:nth-child(1) { animation-delay: 0.05s; }
+.card:nth-child(2) { animation-delay: 0.1s; }
+.card:nth-child(3) { animation-delay: 0.15s; }
+
+/* CARD PREVIEW */
+.card-preview {
+  height: 160px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-ideaflow {
+  background: linear-gradient(135deg, #1a2535 0%, #0f1923 100%);
+}
+
+.preview-house {
+  background: linear-gradient(135deg, #1a1510 0%, #2e2420 100%);
+}
+
+.preview-arch {
+  background: linear-gradient(135deg, #0f1510 0%, #1a2015 100%);
+}
+
+/* mini preview decorations */
+.preview-deco {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 16px;
+  opacity: 0.6;
+}
+
+.mini-bar {
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.15);
+}
+
+.mini-block {
+  border-radius: 4px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.preview-icon {
+  position: absolute;
+  font-size: 42px;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+  z-index: 1;
+}
+
+.card-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  font-weight: 500;
+  z-index: 2;
+}
+
+.badge-new { background: rgba(76,175,125,0.2); color: var(--green); border: 1px solid rgba(76,175,125,0.3); }
+.badge-wip { background: rgba(196,163,90,0.2); color: var(--accent2); border: 1px solid rgba(196,163,90,0.3); }
+.badge-ready { background: rgba(91,156,246,0.2); color: var(--blue); border: 1px solid rgba(91,156,246,0.3); }
+
+/* CARD BODY */
+.card-body {
+  padding: 20px;
+}
+
+.card-cat {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.card-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.card-desc {
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.65;
+  margin-bottom: 16px;
+}
+
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.tag {
+  padding: 3px 9px;
+  border-radius: 4px;
+  background: var(--surface2);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.5px;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.card-date {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-open {
+  padding: 6px 14px;
+  border-radius: 6px;
+  background: var(--accent);
+  color: white;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.btn-open:hover { opacity: 0.85; }
+
+.btn-ghost {
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: none;
+  color: var(--muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.btn-ghost:hover { border-color: var(--border-light); color: var(--text); }
+
+/* MODAL */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(8px);
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.modal-overlay.open { display: flex; }
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 560px;
+  overflow: hidden;
+  animation: modalIn 0.25s ease;
+}
+
+@keyframes modalIn {
+  from { opacity:0; transform:scale(0.95) translateY(12px); }
+  to { opacity:1; transform:scale(1) translateY(0); }
+}
+
+.modal-head {
+  padding: 24px 24px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.modal-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.modal-close:hover { color: var(--text); }
+
+.modal-body { padding: 24px; }
+
+.modal-info { margin-bottom: 20px; }
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+
+.info-row:last-child { border-bottom: none; }
+.info-label { color: var(--muted); font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 1px; }
+.info-val { font-weight: 400; text-align: right; }
+
+.modal-note {
+  padding: 14px 16px;
+  background: var(--surface2);
+  border-radius: 8px;
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.65;
+  border-left: 2px solid var(--accent);
+  margin-bottom: 20px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.modal-actions .btn-open { flex: 1; justify-content: center; padding: 10px; font-size: 11px; }
+.modal-actions .btn-ghost { padding: 10px 16px; font-size: 11px; }
+
+/* EMPTY + ADD CARD */
+.card-add {
+  background: none;
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  text-align: center;
+  cursor: default;
+  min-height: 280px;
+}
+
+.add-icon { font-size: 28px; margin-bottom: 12px; opacity: 0.3; }
+.add-text { font-size: 13px; color: var(--muted); line-height: 1.6; }
+.add-text strong { color: var(--text); font-weight: 500; display: block; margin-bottom: 6px; }
+
+/* FOOTER */
+footer {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 24px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 2px;
+  border-top: 1px solid var(--border);
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  header, main { padding-left: 20px; padding-right: 20px; }
+  .hero-line { font-size: 2rem; }
+  .header-stats { gap: 16px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="brand">
+      <div class="brand-icon">⚡</div>
+      <div>
+        <div class="brand-name">Gap's Library</div>
+        <div class="brand-sub">WEB APP COLLECTION</div>
+      </div>
+    </div>
+    <div class="header-stats">
+      <div class="stat">
+        <div class="stat-num" id="total-count">3</div>
+        <div class="stat-label">Total Apps</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" style="color:var(--green)">2</div>
+        <div class="stat-label">Ready</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-line">
+    All your<br>
+    <span class="accent">web apps</span><br>
+    <span class="dim">in one place.</span>
+  </div>
+  <div class="hero-desc">
+    ทุก Web App ที่เราสร้างด้วยกัน — เก็บไว้ที่นี่ เปิดดู Preview เลือกพัฒนาต่อได้เลย
+  </div>
+
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="filterCards('all', this)">ALL</button>
+    <button class="filter-btn" onclick="filterCards('architecture', this)">ARCHITECTURE</button>
+    <button class="filter-btn" onclick="filterCards('productivity', this)">PRODUCTIVITY</button>
+    <button class="filter-btn" onclick="filterCards('planning', this)">PLANNING</button>
+    <span class="add-hint">+ เพิ่มโดย Claude อัตโนมัติ</span>
+  </div>
+</header>
+
+<main>
+  <div class="grid" id="card-grid">
+
+    <!-- APP 1: IdeaFlow -->
+    <div class="card" data-cat="productivity" data-featured="false" onclick="openModal('ideaflow')">
+      <div class="card-preview preview-ideaflow">
+        <div class="preview-deco">
+          <div class="mini-block" style="width:80px;height:28px"></div>
+          <div class="mini-block" style="width:60px;height:28px"></div>
+          <div class="mini-block" style="width:100px;height:28px"></div>
+          <div class="mini-bar" style="width:140px"></div>
+          <div class="mini-bar" style="width:100px"></div>
+          <div class="mini-bar" style="width:120px"></div>
+        </div>
+        <div class="preview-icon">💡</div>
+        <span class="card-badge badge-ready">LIVE</span>
+      </div>
+      <div class="card-body">
+        <div class="card-cat">Productivity</div>
+        <div class="card-title">IdeaFlow</div>
+        <div class="card-desc">แอปเก็บและจัดการไอเดีย มี Inbox, Board, Mood Board, Focus Groups และ Compare</div>
+        <div class="card-tags">
+          <span class="tag">Idea Management</span>
+          <span class="tag">Mood Board</span>
+          <span class="tag">Board View</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-date">Hosted · Firebase</div>
+          <div class="card-actions">
+            <button class="btn-ghost" onclick="event.stopPropagation(); openModal('ideaflow')">Info</button>
+            <a class="btn-open" href="https://studio--studio-11830258-c709c.us-central1.hosted.app/inbox" target="_blank" onclick="event.stopPropagation()">↗ เปิด</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- APP 2: House Design Plan -->
+    <div class="card" data-cat="architecture" data-featured="true" onclick="openModal('house')">
+      <div class="card-preview preview-house">
+        <div class="preview-deco">
+          <div class="mini-block" style="width:120px;height:60px;border-radius:2px"></div>
+          <div class="mini-block" style="width:60px;height:40px;border-radius:2px"></div>
+          <div class="mini-block" style="width:40px;height:40px;border-radius:2px"></div>
+        </div>
+        <div class="preview-icon">🏡</div>
+        <span class="card-badge badge-new">NEW</span>
+      </div>
+      <div class="card-body">
+        <div class="card-cat">Architecture</div>
+        <div class="card-title">แผนบ้านในฝัน</div>
+        <div class="card-desc">แผนดีไซน์บ้านสไตล์ Tropical Brutalism — ผังบ้าน, วัสดุ, พื้นที่ภายนอก และ Roadmap</div>
+        <div class="card-tags">
+          <span class="tag">Brutalist</span>
+          <span class="tag">Tadao Ando</span>
+          <span class="tag">Floor Plan</span>
+          <span class="tag">ไทย</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-date">Apr 2026 · Local</div>
+          <div class="card-actions">
+            <button class="btn-ghost" onclick="event.stopPropagation(); openModal('house')">Info</button>
+            <a class="btn-open" href="house-design-plan.html" target="_blank" onclick="event.stopPropagation()">↗ เปิด</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- APP 3: Arch Project Plan -->
+    <div class="card" data-cat="planning" data-featured="true" onclick="openModal('arch')">
+      <div class="card-preview" style="background: linear-gradient(135deg, #0f1218 0%, #151c25 100%);">
+        <div class="preview-deco">
+          <div style="display:flex;gap:4px;width:100%;">
+            <div class="mini-block" style="flex:1;height:12px;border-radius:2px"></div>
+            <div class="mini-block" style="width:30%;height:12px;background:rgba(255,107,53,0.3);border-radius:2px"></div>
+          </div>
+          <div style="display:flex;gap:4px;width:100%;">
+            <div class="mini-block" style="flex:1;height:12px;border-radius:2px"></div>
+            <div class="mini-block" style="width:50%;height:12px;background:rgba(184,154,90,0.3);border-radius:2px"></div>
+          </div>
+          <div style="display:flex;gap:4px;width:100%;">
+            <div class="mini-block" style="flex:1;height:12px;border-radius:2px"></div>
+            <div class="mini-block" style="width:40%;height:12px;background:rgba(74,94,58,0.4);border-radius:2px"></div>
+          </div>
+        </div>
+        <div class="preview-icon">📐</div>
+        <span class="card-badge badge-new">NEW</span>
+      </div>
+      <div class="card-body">
+        <div class="card-cat">Planning · Architecture</div>
+        <div class="card-title">Architectural Project Plan</div>
+        <div class="card-desc">Gantt Chart 20 สัปดาห์ + Phase Details, Tools, Methods และ Precedent Study สำหรับออกแบบบ้าน</div>
+        <div class="card-tags">
+          <span class="tag">Gantt Chart</span>
+          <span class="tag">Tools Guide</span>
+          <span class="tag">Methods</span>
+          <span class="tag">Precedent</span>
+        </div>
+        <div class="card-footer">
+          <div class="card-date">Apr 2026 · Local</div>
+          <div class="card-actions">
+            <button class="btn-ghost" onclick="event.stopPropagation(); openModal('arch')">Info</button>
+            <a class="btn-open" href="arch-project-plan.html" target="_blank" onclick="event.stopPropagation()">↗ เปิด</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADD PLACEHOLDER -->
+    <div class="card-add">
+      <div class="add-icon">＋</div>
+      <div class="add-text">
+        <strong>Web App ถัดไป</strong>
+        บอก Claude ว่าอยากสร้างอะไร — จะถูกเพิ่มที่นี่โดยอัตโนมัติ
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>GAP'S WEB APP LIBRARY · BUILT WITH CLAUDE · 2026</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title" id="modal-title">App Name</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;margin-top:4px" id="modal-cat">CATEGORY</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-info" id="modal-info"></div>
+      <div class="modal-note" id="modal-note"></div>
+      <div class="modal-actions">
+        <a class="btn-open" id="modal-link" href="#" target="_blank">↗ เปิด Web App</a>
+        <button class="btn-ghost" onclick="closeModal()">ปิด</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const apps = {
+  ideaflow: {
+    title: 'IdeaFlow',
+    cat: 'PRODUCTIVITY',
+    link: 'https://studio--studio-11830258-c709c.us-central1.hosted.app/inbox',
+    info: [
+      ['สถานะ', '🟢 Live (Hosted)'],
+      ['Platform', 'Firebase Hosting'],
+      ['หน้าหลัก', 'Inbox, Board, Mood Board, Compare, Focus Groups'],
+      ['สร้างเมื่อ', 'ก่อนหน้านี้'],
+    ],
+    note: 'แอปที่ Gap สร้างไว้แล้วสำหรับเก็บไอเดียออกแบบบ้าน มี URL จริงที่เปิดได้ทุกที่ — เหมาะสำหรับพัฒนาต่อด้าน Feature เพิ่มเติม',
+  },
+  house: {
+    title: 'แผนบ้านในฝัน',
+    cat: 'ARCHITECTURE',
+    link: 'house-design-plan.html',
+    info: [
+      ['สถานะ', '🟡 Local (ยังไม่ได้ Host)'],
+      ['สไตล์', 'Tropical Brutalism'],
+      ['ไฮไลต์', 'ผัง SVG, วัสดุ, Outdoor, Roadmap'],
+      ['สร้างเมื่อ', 'Apr 2026'],
+    ],
+    note: 'แผนดีไซน์บ้านสไตล์ผสม Brutalist + Tadao Ando + Tropical ชั้นเดียว 3 ห้องนอน — พัฒนาต่อได้โดยเพิ่มรูปจริง, ผัง 3D หรือ Budget Calculator',
+  },
+  arch: {
+    title: 'Architectural Project Plan',
+    cat: 'PLANNING · ARCHITECTURE',
+    link: 'arch-project-plan.html',
+    info: [
+      ['สถานะ', '🟡 Local (ยังไม่ได้ Host)'],
+      ['ไฮไลต์', 'Gantt 20 สัปดาห์, 5 Phases, Tools, Methods, Precedent'],
+      ['Tab ทั้งหมด', '5 Tab: Gantt / Phases / Tools / Methods / Reference'],
+      ['สร้างเมื่อ', 'Apr 2026'],
+    ],
+    note: 'แผนโปรเจกต์สถาปนิกแบบ Professional ครบชุด — พัฒนาต่อได้โดยเพิ่ม Progress Tracking, Checklist จริง หรือเชื่อมกับ IdeaFlow',
+  },
+};
+
+function openModal(id) {
+  const app = apps[id];
+  document.getElementById('modal-title').textContent = app.title;
+  document.getElementById('modal-cat').textContent = app.cat;
+  document.getElementById('modal-link').href = app.link;
+
+  const infoHTML = app.info.map(([label, val]) =>
+    `<div class="info-row"><span class="info-label">${label}</span><span class="info-val">${val}</span></div>`
+  ).join('');
+  document.getElementById('modal-info').innerHTML = infoHTML;
+  document.getElementById('modal-note').textContent = app.note;
+
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+
+function filterCards(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  document.querySelectorAll('.card[data-cat]').forEach(card => {
+    if (cat === 'all' || card.dataset.cat.includes(cat)) {
+      card.style.display = '';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+
+// keyboard close
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>
